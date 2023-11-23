@@ -37,7 +37,7 @@ import ProcessOrder from "./components/admin/ProcessOrder";
 import UsersList from "./components/admin/UsersList";
 import UpdateUser from "./components/admin/UpdateUser";
 import ProductReviews from "./components/admin/ProductReviews";
-
+import Category from "./components/product/Category"
 import ProtectedRoute from "./components/route/ProtectedRoute";
 import { loadUser } from "./actions/userActions";
 import { useSelector } from "react-redux";
@@ -54,13 +54,19 @@ function App() {
   useEffect(() => {
     store.dispatch(loadUser());
 
-    async function getStripApiKey() {
+  async function getStripeApiKey() {
+    try {
       const { data } = await axios.get("/api/v1/stripeapi");
-
       setStripeApiKey(data.stripeApiKey);
-    }
-
-    getStripApiKey();
+    } catch (error) {
+      if (error.response.status === 401) {
+        console.log("User not authenticated");
+      } else {
+        console.error("Error fetching Stripe API key:", error.message);
+      }
+    } 
+  }
+    getStripeApiKey();
   }, []);
 
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
@@ -74,6 +80,7 @@ function App() {
             <Route path="/" Component={Home} exact />
             <Route path="/search/:keyword" Component={Home} />
             <Route path="/product/:id" Component={ProductDetails} exact />
+            <Route path="/category/:category" Component={Category} exact />
 
             <Route path="/cart" Component={Cart} />
             <Route

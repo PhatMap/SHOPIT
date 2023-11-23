@@ -2,7 +2,8 @@ import React, { Fragment, useState, useEffect } from "react";
 
 import MetaData from "../layout/MetaData";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { register, clearErrors } from "../../actions/userActions";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +24,6 @@ const Register = () => {
     "/images/default_avatar.jpg"
   );
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { isAuthenticated, error, loading } = useSelector(
@@ -36,10 +36,19 @@ const Register = () => {
     }
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
-  }, [dispatch, alert, isAuthenticated, error, history]);
+  }, [dispatch, isAuthenticated, error, history]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -72,6 +81,7 @@ const Register = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"Register User"} />
 
       <div className="row wrapper">

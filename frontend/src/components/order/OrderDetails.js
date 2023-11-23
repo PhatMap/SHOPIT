@@ -4,13 +4,13 @@ import { Link, useParams } from "react-router-dom";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrderDetails, clearErrors } from "../../actions/orderActions";
 
 const OrderDetails = () => {
   const { id } = useParams();
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const {
@@ -31,10 +31,19 @@ const OrderDetails = () => {
     dispatch(getOrderDetails(id));
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
-  }, [dispatch, alert, error, id]);
+  }, [dispatch, error, id]);
 
   const shippingDetails =
     shippingInfo &&
@@ -45,6 +54,7 @@ const OrderDetails = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"Order Details"} />
 
       {loading ? (

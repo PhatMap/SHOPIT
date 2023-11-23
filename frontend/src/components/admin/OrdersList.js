@@ -6,7 +6,8 @@ import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader";
 import Sidebar from "./Sidebar";
 
-import { useAlert } from "react-alert";
+import {  ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   allOrders,
@@ -17,7 +18,6 @@ import { DELETE_ORDER_RESET } from "../../constants/orderConstants";
 
 const OrdersList = () => {
   const history = useNavigate();
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { loading, error, orders } = useSelector((state) => state.allOrders);
@@ -27,16 +27,34 @@ const OrdersList = () => {
     dispatch(allOrders());
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (isDeleted) {
-      alert.success("Order deleted successfully");
+      toast.success("Order deleted successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       history("/admin/orders");
       dispatch({ type: DELETE_ORDER_RESET });
     }
-  }, [dispatch, alert, error, isDeleted, history]);
+  }, [dispatch, error, isDeleted, history]);
 
   const deleteOrderHandler = (id) => {
     dispatch(deleteOrder(id));
@@ -109,6 +127,7 @@ const OrdersList = () => {
 
   return (
     <Fragment>
+      <ToastContainer/>
       <MetaData title={"All Orders"} />
       <div className="row">
         <div className="col-12 col-md-2">

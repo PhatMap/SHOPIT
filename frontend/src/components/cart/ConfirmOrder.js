@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import MetaData from "../layout/MetaData";
 import CheckoutSteps from "./CheckoutSteps";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createOrder } from "../../actions/orderActions";
 
 const ConfirmOrder = () => {
   const history = useNavigate();
@@ -19,6 +20,7 @@ const ConfirmOrder = () => {
   const shippingPrice = itemsPrice > 200 ? 0 : 25;
   const taxPrice = Number((0.05 * itemsPrice).toFixed(2));
   const totalPrice = (itemsPrice + shippingPrice + taxPrice).toFixed(2);
+  const dispatch = useDispatch();
 
   const processToPayment = () => {
     const data = {
@@ -30,6 +32,34 @@ const ConfirmOrder = () => {
 
     sessionStorage.setItem("orderInfo", JSON.stringify(data));
     history("/payment");
+  };
+
+  function generateRandomId() {
+    const timestamp = new Date().getTime();
+    const random = Math.floor(Math.random() * 1000000);
+    const randomId = `${timestamp}${random}`;
+    return randomId;
+  }
+
+  const processToCashPayment = () => {
+
+    const order = {
+      itemsPrice: itemsPrice.toFixed(2),
+      shippingPrice,
+      taxPrice,
+      totalPrice,
+      orderItems: cartItems,
+      shippingInfo: shippingInfo,
+    };
+
+    order.paymentInfo = {
+      id: generateRandomId(),
+      status: "Progress",
+    };
+
+    dispatch(createOrder(order));
+
+    history("/success");
   };
 
   return (
@@ -109,7 +139,14 @@ const ConfirmOrder = () => {
               className="btn btn-primary btn-block"
               onClick={processToPayment}
             >
-              Proceed to Payment
+              Prepayment (Bank card)
+            </button>
+            <button
+              id="checkout_btn"
+              className="btn btn-primary btn-block"
+              onClick={processToCashPayment}
+            >
+              Cash on Delivery (COD)
             </button>
           </div>
         </div>

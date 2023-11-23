@@ -17,14 +17,26 @@ const Search = () => {
 
   return (
     <form onSubmit={searchHandler}>
-      <div className="input-group">
+      <div className="input-group ">
         <input
           type="text"
           id="search_field"
           className="form-control"
           placeholder="Enter Product Name ..."
+          value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
+        {keyword && (
+          <div className="input-group-append">
+            <button
+              id="remove_btn"
+              className="btn"
+              onClick={() => setKeyword("")}
+            >
+              <i className="fa fa-remove" aria-hidden="true"></i>
+            </button>
+          </div>
+        )}
         <div className="input-group-append">
           <button id="search_btn" className="btn">
             <i className="fa fa-search" aria-hidden="true"></i>

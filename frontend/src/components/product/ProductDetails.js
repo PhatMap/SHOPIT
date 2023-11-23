@@ -5,7 +5,8 @@ import Loader from "../layout/Loader";
 import MetaData from "../layout/MetaData";
 import ListReviews from "../review/ListReviews";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProductDetails,
@@ -24,7 +25,6 @@ const ProductDetails = () => {
   const [comment, setComment] = useState("");
 
   const dispatch = useDispatch();
-  const alert = useAlert();
 
   const { loading, error, product } = useSelector(
     (state) => state.productDetails
@@ -38,24 +38,60 @@ const ProductDetails = () => {
     dispatch(getProductDetails(id));
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (reviewError) {
-      alert.error(reviewError);
+      toast.error(reviewError, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (success) {
-      alert.success("Reivew posted successfully");
+      toast.success("Reivew posted successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch({ type: NEW_REVIEW_RESET });
     }
-  }, [dispatch, alert, error, id, reviewError, success]);
+  }, [dispatch, error, id, reviewError, success]);
 
   const addToCart = () => {
     dispatch(addItemToCart(id, quantity));
-    alert.success("Item Added to Cart");
+    toast.success("Item Added to Cart", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   };
 
   const increaseQty = () => {
@@ -126,6 +162,7 @@ const ProductDetails = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       {loading ? (
         <Loader />
       ) : (

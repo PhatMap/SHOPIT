@@ -3,7 +3,8 @@ import React, { Fragment, useState, useEffect } from "react";
 import MetaData from "../layout/MetaData";
 import Sidebar from "./Sidebar";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { newProduct, clearErrors } from "../../actions/productActions";
 import { NEW_PRODUCT_RESET } from "../../constants/productConstants";
@@ -18,41 +19,53 @@ const NewProduct = () => {
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState(0);
   const [seller, setSeller] = useState("");
+
+  // const [name, setName] = useState("Test");
+  // const [price, setPrice] = useState(10);
+  // const [description, setDescription] = useState("a");
+  // const [category, setCategory] = useState("Table");
+  // const [stock, setStock] = useState(1);
+  // const [seller, setSeller] = useState("Phat");
+
   const [images, setImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
 
-  const categories = [
-    "Electronics",
-    "Cameras",
-    "Laptops",
-    "Accessories",
-    "Headphones",
-    "Food",
-    "Books",
-    "Clothes/Shoes",
-    "Beauty/Health",
-    "Sports",
-    "Outdoor",
-    "Home",
-  ];
+  const categories = ["Table", "Chair", "Bed", "Shelve", "Cabinet", "Light"];
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { loading, error, success } = useSelector((state) => state.newProduct);
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (success) {
       history("/admin/products");
-      alert.success("Product created successfully");
+      toast.success("Product created successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch({ type: NEW_PRODUCT_RESET });
     }
-  }, [dispatch, alert, error, success, history]);
+  }, [dispatch, error, success, history]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -94,6 +107,7 @@ const NewProduct = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"New Product"} />
       <div className="row">
         <div className="col-12 col-md-2">

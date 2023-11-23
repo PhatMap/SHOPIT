@@ -2,7 +2,8 @@ import React, { Fragment, useState, useEffect } from "react";
 
 import MetaData from "../layout/MetaData";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateProfile,
@@ -22,7 +23,6 @@ const UpdateProfile = () => {
     "/images/default_avatar.jpg"
   );
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
@@ -36,12 +36,30 @@ const UpdateProfile = () => {
     }
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (isUpdated) {
-      alert.success("User updated successfully");
+      toast.success("User updated successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(loadUser());
 
       history("/me");
@@ -50,7 +68,7 @@ const UpdateProfile = () => {
         type: UPDATE_PROFILE_RESET,
       });
     }
-  }, [dispatch, alert, error, history, isUpdated]);
+  }, [dispatch, error, history, isUpdated, user]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -77,6 +95,7 @@ const UpdateProfile = () => {
   };
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"Update Profile"} />
 
       <div className="row wrapper">

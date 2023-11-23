@@ -30,6 +30,9 @@ import {
   DELETE_REVIEW_RESET,
   DELETE_REVIEW_FAIL,
   CLEAR_ERRORS,
+  PRODUCTS_BY_CATEGORY_REQUEST,
+  PRODUCTS_BY_CATEGORY_SUCCESS,
+  PRODUCTS_BY_CATEGORY_FAIL,
 } from "../constants/productConstants";
 
 export const getProducts =
@@ -43,8 +46,12 @@ export const getProducts =
       if (category) {
         link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&category=${category}&ratings[gte]=${rating}`;
       }
-
-      const { data } = await axios.get(link);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+      const { data } = await axios.get(link, config);
 
       dispatch({
         type: ALL_PRODUCTS_SUCCESS,
@@ -58,6 +65,29 @@ export const getProducts =
       throw error;
     }
   };
+
+  export const getProductsByCategory =
+    (category) =>
+    async (dispatch) => {
+      try {
+        dispatch({ type: PRODUCTS_BY_CATEGORY_REQUEST });
+
+        const { data } = await axios.get(
+          `/api/v1/products?category=${category}`
+        );
+
+        dispatch({
+          type: PRODUCTS_BY_CATEGORY_SUCCESS,
+          payload: data,
+        });
+      } catch (error) {
+        dispatch({
+          type: PRODUCTS_BY_CATEGORY_FAIL,
+          payload: error.response.data.message,
+        });
+        throw error;
+      }
+    };
 
 export const newProduct = (productData) => async (dispatch) => {
   try {
@@ -82,7 +112,7 @@ export const newProduct = (productData) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: NEW_PRODUCT_FAIL,
-      payload: error.response.data.message,
+      payload: error.response.data.message, 
     });
   }
 };

@@ -3,7 +3,8 @@ import React, { Fragment, useState, useEffect } from "react";
 import MetaData from "../layout/MetaData";
 import Sidebar from "./Sidebar";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateUser,
@@ -21,7 +22,6 @@ const UpdateUser = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { error, isUpdated } = useSelector((state) => state.user);
@@ -40,12 +40,30 @@ const UpdateUser = () => {
     }
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (isUpdated) {
-      alert.success("User updated successfully");
+      toast.error("User updated successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
 
       history("/admin/users");
 
@@ -53,7 +71,7 @@ const UpdateUser = () => {
         type: UPDATE_USER_RESET,
       });
     }
-  }, [dispatch, alert, error, history, isUpdated, userId, user]);
+  }, [dispatch, error, history, isUpdated, userId, user]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -68,6 +86,7 @@ const UpdateUser = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={`Update User`} />
       <div className="row">
         <div className="col-12 col-md-2">

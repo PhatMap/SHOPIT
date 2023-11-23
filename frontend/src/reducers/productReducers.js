@@ -32,6 +32,9 @@ import {
   DELETE_REVIEW_RESET,
   DELETE_REVIEW_FAIL,
   CLEAR_ERRORS,
+  PRODUCTS_BY_CATEGORY_REQUEST,
+  PRODUCTS_BY_CATEGORY_SUCCESS,
+  PRODUCTS_BY_CATEGORY_FAIL,
 } from "../constants/productConstants";
 
 export const productsReducer = (state = { products: [] }, action) => {
@@ -60,6 +63,40 @@ export const productsReducer = (state = { products: [] }, action) => {
 
     case ALL_PRODUCTS_FAIL:
     case ADMIN_PRODUCTS_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const categoryReducer = (state = { products: [] }, action) => {
+  switch (action.type) {
+    case PRODUCTS_BY_CATEGORY_REQUEST:
+      return {
+        loading: true,
+        products: [],
+      };
+
+    case PRODUCTS_BY_CATEGORY_SUCCESS:
+      return {
+        loading: false,
+        products: action.payload.products,
+        productsCount: action.payload.productsCount,
+        resPerPage: action.payload.resPerPage,
+        filteredProductsCount: action.payload.filteredProductsCount,
+      };
+
+    case PRODUCTS_BY_CATEGORY_FAIL:
       return {
         loading: false,
         error: action.payload,

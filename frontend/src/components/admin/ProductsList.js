@@ -6,7 +6,8 @@ import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader";
 import Sidebar from "./Sidebar";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAdminProducts,
@@ -17,7 +18,6 @@ import { DELETE_PRODUCT_RESET } from "../../constants/productConstants";
 
 const ProductsList = () => {
   const history = useNavigate();
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { loading, error, products } = useSelector((state) => state.products);
@@ -29,21 +29,48 @@ const ProductsList = () => {
     dispatch(getAdminProducts());
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (deleteError) {
-      alert.error(deleteError);
+      toast.error(deleteError, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (isDeleted) {
-      alert.success("Product deleted successfully");
+      toast.error("Product deleted successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       history("/admin/products");
       dispatch({ type: DELETE_PRODUCT_RESET });
     }
-  }, [dispatch, alert, error, deleteError, isDeleted, history]);
+  }, [dispatch, error, deleteError, isDeleted, history]);
 
   const setProducts = () => {
     const data = {
@@ -110,6 +137,7 @@ const ProductsList = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"All Products"} />
       <div className="row">
         <div className="col-12 col-md-2">

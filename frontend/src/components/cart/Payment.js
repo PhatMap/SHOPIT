@@ -3,7 +3,8 @@ import React, { Fragment, useEffect } from "react";
 import MetaData from "../layout/MetaData";
 import CheckoutSteps from "./CheckoutSteps";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder, clearErrors } from "../../actions/orderActions";
 
@@ -31,7 +32,6 @@ const options = {
 
 const Payment = () => {
   const history = useNavigate();
-  const alert = useAlert();
   const stripe = useStripe();
   const elements = useElements();
   const dispatch = useDispatch();
@@ -42,10 +42,19 @@ const Payment = () => {
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
-  }, [dispatch, alert, error]);
+  }, [dispatch, error]);
 
   const order = {
     orderItems: cartItems,
@@ -97,7 +106,16 @@ const Payment = () => {
       });
 
       if (result.error) {
-        alert.error(result.error.message);
+        toast.error(result.error.message, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         document.querySelector("#pay_btn").disabled = false;
       } else {
         // The payment is processed or not
@@ -111,17 +129,36 @@ const Payment = () => {
 
           history("/success");
         } else {
-          alert.error("There is some issue while payment processing");
+          toast.error("There is some issue while payment processing", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
         }
       }
     } catch (error) {
       document.querySelector("#pay_btn").disabled = false;
-      alert.error(error.response.data.message);
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"Payment"} />
 
       <CheckoutSteps shipping confirmOrder payment />

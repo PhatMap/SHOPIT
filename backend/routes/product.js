@@ -11,6 +11,7 @@ const {
   getProductReviews,
   deleteReview,
   getAdminProducts,
+  getProductsByCategory,
 } = require("../controllers/productController");
 const { isAuthenticatedUser, authorizeRoles } = require("../middlewares/auth");
 
@@ -24,6 +25,7 @@ router
   .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteProduct);
 
 router.route("/products").get(getProducts);
+router.route("/products/:category").get(getProductsByCategory);
 router.route("/product/:id").get(getSingleProduct);
 router.route("/admin/products").get(getAdminProducts);
 

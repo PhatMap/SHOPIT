@@ -2,7 +2,8 @@ import React, { Fragment, useState, useEffect } from "react";
 
 import MetaData from "../layout/MetaData";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { updatePassword, clearErrors } from "../../actions/userActions";
 import { UPDATE_PASSWORD_RESET } from "../../constants/userConstants";
@@ -13,27 +14,43 @@ const UpdatePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { error, isUpdated, loading } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (isUpdated) {
-      alert.success("Password updated successfully");
-
+      toast.success("Password updated successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       history("/me");
 
       dispatch({
         type: UPDATE_PASSWORD_RESET,
       });
     }
-  }, [dispatch, alert, error, history, isUpdated]);
+  }, [dispatch, error, history, isUpdated]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -47,6 +64,7 @@ const UpdatePassword = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"Change Password"} />
 
       <div className="row wrapper">

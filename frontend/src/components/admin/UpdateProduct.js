@@ -3,7 +3,8 @@ import React, { Fragment, useState, useEffect } from "react";
 import MetaData from "../layout/MetaData";
 import Sidebar from "./Sidebar";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateProduct,
@@ -28,22 +29,8 @@ const UpdateProduct = () => {
   const [oldImages, setOldImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
 
-  const categories = [
-    "Electronics",
-    "Cameras",
-    "Laptops",
-    "Accessories",
-    "Headphones",
-    "Food",
-    "Books",
-    "Clothes/Shoes",
-    "Beauty/Health",
-    "Sports",
-    "Outdoor",
-    "Home",
-  ];
+  const categories = ["Table", "Chair", "Bed", "Shelve", "Cabinet", "Light"];
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { error, product } = useSelector((state) => state.productDetails);
@@ -69,30 +56,48 @@ const UpdateProduct = () => {
     }
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (updateError) {
-      alert.error(updateError);
+      toast.error(updateError, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (isUpdated) {
       history("/admin/products");
-      alert.success("Product updated successfully");
+      toast.success("Product updated successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch({ type: UPDATE_PRODUCT_RESET });
     }
-  }, [
-    dispatch,
-    alert,
-    error,
-    isUpdated,
-    history,
-    updateError,
-    product,
-    productId,
-  ]);
+  }, [dispatch, error, isUpdated, history, updateError, product, productId]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -135,6 +140,7 @@ const UpdateProduct = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"Update Product"} />
       <div className="row">
         <div className="col-12 col-md-2">

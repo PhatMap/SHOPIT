@@ -5,7 +5,8 @@ import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader";
 import Sidebar from "./Sidebar";
 
-import { useAlert } from "react-alert";
+import {  ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getOrderDetails,
@@ -18,7 +19,6 @@ const ProcessOrder = () => {
   const { id } = useParams();
   const [status, setStatus] = useState("");
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { loading, order = {} } = useSelector((state) => state.orderDetails);
@@ -38,15 +38,33 @@ const ProcessOrder = () => {
     dispatch(getOrderDetails(orderId));
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (isUpdated) {
-      alert.success("Order updated successfully");
+      toast.success("Order updated successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch({ type: UPDATE_ORDER_RESET });
     }
-  }, [dispatch, alert, error, isUpdated, orderId]);
+  }, [dispatch, error, isUpdated, orderId]);
 
   const updateOrderHandler = (id) => {
     const formData = new FormData();
@@ -62,6 +80,7 @@ const ProcessOrder = () => {
 
   return (
     <Fragment>
+      <ToastContainer/>
       <MetaData title={`Process Order # ${order && order._id}`} />
       <div className="row">
         <div className="col-12 col-md-2">

@@ -1,20 +1,20 @@
 import React, { Fragment, useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
-import MetaData from "./layout/MetaData";
-import Product from "./product/Product";
-import Loader from "./layout/Loader";
+import MetaData from "../layout/MetaData";
+import Product from "../product/Product";
+import Loader from "../layout/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getProducts } from "../actions/productActions";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css"; // Don't forget to import the styles
 import { useParams } from "react-router-dom";
+import Footer from "../layout/Footer";
+import { getProducts } from "../../actions/productActions";
 
-const Home = () => {
+const Category = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [price, setPrice] = useState([1, 1000]);
-  const [category, setCategory] = useState("");
   const [rating, setRating] = useState(0);
 
   const categories = ["Table", "Chair", "Bed", "Shelve", "Cabinet", "Light"];
@@ -28,25 +28,10 @@ const Home = () => {
     productsCount,
     resPerPage,
     filteredProductsCount,
-  } = useSelector((state) => state.products);
+  } = useSelector((state) => state.category);
 
-  const { keyword } = useParams();
 
-  useEffect(() => {
-    dispatch(getProducts(keyword, currentPage, price, category, rating));
-    if (error) {
-      toast.error(error, {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    }
-  }, [dispatch, keyword, currentPage, price, category, rating, error]);
+  const { keyword, category } = useParams();
 
   function setCurrentPageNo(pageNumber) {
     setCurrentPage(pageNumber);
@@ -77,7 +62,7 @@ const Home = () => {
               textShadow: "1px 1px 2px rgba(0, 0, 0, 0.2)",
             }}
           >
-            Latest products
+            {category}
           </h1>
 
           <section id="products" className="container mt-5">
@@ -110,21 +95,6 @@ const Home = () => {
 
                       <div className="mt-5">
                         <h4 className="mb-3">Categories</h4>
-
-                        <ul className="pl-0">
-                          {categories.map((category) => (
-                            <li
-                              style={{
-                                cursor: "pointer",
-                                listStyleType: "none",
-                              }}
-                              key={category}
-                              onClick={() => setCategory(category)}
-                            >
-                              {category}
-                            </li>
-                          ))}
-                        </ul>
                       </div>
 
                       <hr className="my-3" />
@@ -190,8 +160,9 @@ const Home = () => {
           )}
         </Fragment>
       )}
+      <Footer />
     </Fragment>
   );
 };
 
-export default Home;
+export default Category;

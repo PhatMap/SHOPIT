@@ -2,7 +2,8 @@ import React, { Fragment, useState, useEffect } from "react";
 
 import MetaData from "../layout/MetaData";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { resetPassword, clearErrors } from "../../actions/userActions";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,22 +15,39 @@ const NewPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { error, success } = useSelector((state) => state.forgotPassword);
 
   useEffect(() => {
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (success) {
-      alert.success("Password updated successfully");
+      toast.success("Password updated successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       history("/login");
     }
-  }, [dispatch, alert, error, success, history]);
+  }, [dispatch, error, success, history]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -43,6 +61,7 @@ const NewPassword = () => {
 
   return (
     <Fragment>
+      <ToastContainer />
       <MetaData title={"New Password Reset"} />
 
       <div className="row wrapper">

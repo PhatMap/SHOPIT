@@ -1,9 +1,6 @@
 import React, { Fragment } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import MetaData from "../layout/MetaData";
-
-import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart, removeItemFromCart } from "../../actions/cartActions";
 

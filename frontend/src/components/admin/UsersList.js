@@ -6,7 +6,8 @@ import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader";
 import Sidebar from "./Sidebar";
 
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { allUsers, deleteUser, clearErrors } from "../../actions/userActions";
 import { DELETE_USER_RESET } from "../../constants/userConstants";
@@ -14,7 +15,6 @@ import { DELETE_USER_RESET } from "../../constants/userConstants";
 const UsersList = () => {
   const history = useNavigate();
 
-  const alert = useAlert();
   const dispatch = useDispatch();
 
   const { loading, error, users } = useSelector((state) => state.allUsers);
@@ -24,16 +24,34 @@ const UsersList = () => {
     dispatch(allUsers());
 
     if (error) {
-      alert.error(error);
+      toast.error(error, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       dispatch(clearErrors());
     }
 
     if (isDeleted) {
-      alert.success("User deleted successfully");
+      toast.success("User deleted successfully", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       history("/admin/users");
       dispatch({ type: DELETE_USER_RESET });
     }
-  }, [dispatch, alert, error, isDeleted, history]);
+  }, [dispatch, error, isDeleted, history]);
 
   const deleteUserHandler = (id) => {
     dispatch(deleteUser(id));
@@ -101,6 +119,7 @@ const UsersList = () => {
 
   return (
     <Fragment>
+      <ToastContainer/>
       <MetaData title={"All Users"} />
       <div className="row">
         <div className="col-12 col-md-2">

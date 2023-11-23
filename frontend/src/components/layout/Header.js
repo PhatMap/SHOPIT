@@ -1,47 +1,89 @@
-import React, { Fragment } from "react";
-import { Route, Link } from "react-router-dom";
-
+import React, { Fragment, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaShoppingCart, FaBars } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { useAlert } from "react-alert";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { logout } from "../../actions/userActions";
-
 import Search from "./Search";
-
 import "../../App.css";
+import { getProductsByCategory } from "../../actions/productActions";
 
 const Header = () => {
-  const alert = useAlert();
   const dispatch = useDispatch();
+  const history = useNavigate();
 
   const { user, loading } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.cart);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const categories = ["Table", "Chair", "Bed", "Shelve", "Cabinet", "Light"];
 
   const logoutHandler = () => {
+    toast.error("Logged out successfully", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     dispatch(logout());
-    alert.success("Logged out successfully.");
+  };
+
+  const getCategory = (category) => {
+    setIsMenuOpen(false);
+    history(`/category/${category}`);
+    dispatch(getProductsByCategory(category));
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
     <Fragment>
+      <ToastContainer />
       <nav className="navbar row">
-        <div className="col-12 col-md-3">
+        <div className="col-12 col-md-3 ">
           <div className="navbar-brand">
             <Link to="/">
-              <img src="/images/shopit_logo.png" />
+              <img src="/images/a.png" alt="No logo" />
             </Link>
           </div>
+          <button
+            className="menu-btn "
+            onClick={toggleMenu}
+            id="dropDownMenuButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            style={{ background: "none", border: "none" }}
+          >
+            <FaBars style={{ fontSize: "30px", color: "#333" }} /> Category
+          </button>
         </div>
-
         <div className="col-12 col-md-6 mt-2 mt-md-0">
           <Search />
         </div>
 
         <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
           <Link to="/cart" style={{ textDecoration: "none" }}>
-            <span id="cart" className="ml-3">
-              Cart
-            </span>
-            <span className="ml-1" id="cart_count">
+            <FaShoppingCart
+              className="ml-3"
+              style={{ fontSize: "30px", color: "#ffb700" }}
+            />
+            <span
+              className="ml-1"
+              id="cart_count"
+              style={{
+                fontSize: "13px",
+                borderRadius: "50%",
+                background: "#ffb700",
+                color: "white",
+              }}
+            >
               {cartItems.length}
             </span>
           </Link>
@@ -100,6 +142,20 @@ const Header = () => {
           )}
         </div>
       </nav>
+      {isMenuOpen && (
+        <div className="menu">
+          {categories.map((category, index) => (
+            <Link
+              className="dropdown-item text-danger"
+              to={`/category/${category}`}
+              onClick={() => getCategory(category)}
+              key={index}
+            >
+              {category}
+            </Link>
+          ))}
+        </div>
+      )}
     </Fragment>
   );
 };
